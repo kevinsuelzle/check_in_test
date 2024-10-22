@@ -1,0 +1,38 @@
+name: Python File Checkin
+
+on:
+  push:
+    branches:
+      - main  # Dieser Workflow wird ausgeführt, wenn auf den main-Branch gepusht wird.
+  
+jobs:
+  checkin-python:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'  # Setze die Python-Version
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # Falls es eine requirements-Datei gibt
+    
+    - name: Run Python Script
+      run: |
+        python your_script.py  # Python-Skript, das ausgeführt wird
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "your-username"
+        git config --global user.email "your-email@example.com"
+        git add .
+        git commit -m "Automated check-in of Python files"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
